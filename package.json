@@ -1,0 +1,16 @@
+{
+  "name": "SageLogs",
+  "version": "0.0.1",
+  "description": "Capture client side logs from users to more easily debug problems on remote computers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node_modules/.bin/http-server -p 8090 .",
+    "jsdoc": "node_modules/jsdoc/jsdoc.js dist/SageLog.js README.md -d doc -t node_modules/ink-docstrap/template/ -c jsdoc.conf.json"
+  },
+  "author": "James Mortensen",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^0.6.1"
+  }
+}
