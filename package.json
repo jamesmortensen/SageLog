@@ -6,11 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node_modules/.bin/http-server -p 8090 .",
-    "jsdoc": "node_modules/jsdoc/jsdoc.js dist/SageLog.js README.md -d doc -t node_modules/ink-docstrap/template/ -c jsdoc.conf.json"
+    "min": "find src -name '*.js' -print0 | xargs -0 cat > dist/SageLog.js && node_modules/minify/bin/minify dist/SageLog.js > dist/SageLog.min.js",
+    "jsdoc": "node_modules/jsdoc/jsdoc.js src/** ./README.md -d doc -t node_modules/ink-docstrap/template/ -c jsdoc.conf.json"
   },
   "author": "James Mortensen",
   "license": "MIT",
   "devDependencies": {
-    "http-server": "^0.6.1"
+    "http-server": "^0.6.1",
+    "minify": "^0.6.0",
+    "jsdoc": "^3.3.0-alpha5"
   }
 }

@@ -31,7 +31,7 @@ function SageLogC(options, _console) {
 	/**
 	 * Default log level is LOG, which also includes INFO, WARN, and ERROR.
 	 */
-	var logLevel = LogLevelEnum.LOG,
+	var logLevel = LogLevelEnum.LOG;
 
 
 	/**
@@ -93,6 +93,6 @@ function SageLogC(options, _console) {
 	 */
 	this.getLogLevel = function() { 
 		return logLevel;
-	},
+	};
 
 };

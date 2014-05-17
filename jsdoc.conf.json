@@ -11,7 +11,7 @@
                 },
                 "systemName"      : "SageLogs",
                 "footer"          : "",
-                "copyright"       : "Copyright © 2014, James Mortensen. All rights reserved.",
+                "copyright"       : "Copyright © 2014, James Mortensen. MIT License.",
                 "navType"         : "vertical",
                 "theme"           : "cerulean",
                 "linenums"        : true,

@@ -40,7 +40,7 @@ function ConsoleLogOveridder(logLevel) {
 		var seconds = d.getSeconds() < 10 ? 0 + "" + d.getSeconds() : d.getSeconds()+"";
 		var logTime = hours + ":" + minutes + ":" + seconds;
 		return logTime + " :: ";
-	},
+	};
 
 
 	/**
