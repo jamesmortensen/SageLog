@@ -1,0 +1,7 @@
+// LogPoster.js
+
+
+function LogPoster() {
+	
+
+};
