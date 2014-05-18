@@ -1,0 +1,11 @@
+{
+  "name": "tests",
+  "version": "0.0.0",
+  "description": "Test with node-webkit, or http://localhost:8090/tests/_SpecRunner.html",
+  "main": "_SpecRunner.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}

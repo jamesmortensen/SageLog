@@ -4,9 +4,10 @@
   "description": "Capture client side logs from users to more easily debug problems on remote computers.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node_modules/.bin/http-server -p 8090 .",
-    "min": "find src -name '*.js' -print0 | xargs -0 cat > dist/SageLog.js && node_modules/minify/bin/minify dist/SageLog.js > dist/SageLog.min.js",
+    "test": "grunt jasmine",
+    "watch": "grunt watch",
+    "start": "node_modules/.bin/http-server -p 8090 .",
+    "min": "mkdir -p dist && find src -name '*.js' -print0 | xargs -0 cat > dist/SageLog.js && node_modules/minify/bin/minify dist/SageLog.js > dist/SageLog.min.js",
     "jsdoc": "node_modules/jsdoc/jsdoc.js src/** ./README.md -d doc -t node_modules/ink-docstrap/template/ -c jsdoc.conf.json"
   },
   "author": "James Mortensen",
@@ -14,6 +15,9 @@
   "devDependencies": {
     "http-server": "^0.6.1",
     "minify": "^0.6.0",
-    "jsdoc": "^3.3.0-alpha5"
+    "jsdoc": "^3.3.0-alpha5",
+    "grunt-contrib-jasmine": "^0.6.4",
+    "grunt-contrib-watch": "^0.6.1",
+    "ink-docstrap": "^0.4.0-3"
   }
 }

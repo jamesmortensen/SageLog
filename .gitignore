@@ -1,2 +1,6 @@
 node_modules
 doc
+src/SageLog.js
+dist
+_SpecRunner.html
+.grunt
