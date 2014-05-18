@@ -35,7 +35,7 @@ And, to view the tests in the browser, start the http server:
 $ npm start
 ```
 
-then in your browser, go to [http://localhost:8090/tests/_SpecRunner.html](http://localhost:8090/tests/_SpecRunner.html). This page also live reloads when making changes.
+Then in your browser, go to [http://localhost:8090/tests/_SpecRunner.html](http://localhost:8090/tests/_SpecRunner.html). This page also live reloads when making changes.
 
 
 ## Documentation
