@@ -13,12 +13,12 @@ describe("Collecting logs", function() {
 	  }
 	  return obj;
 	}
-	fakeConsole = makeFakeConsole(console);
-	 logHandler = new SageLog();
+	var fakeConsole = makeFakeConsole(console);
+	var logHandler = new SageLog();
 
 	logHandler.init({
 		"captureLogs":true, 
-		"logLevel":logHandler.logLevels.DEBUG
+		"logLevel":SageLog.DEBUG
 	});
 
     it("Should set the logging level to INFO and no timestamps", function() {

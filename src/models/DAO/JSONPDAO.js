@@ -1,8 +1,14 @@
-// LiveReloadHelper.js
+// JSONPDAO.js
 
-(function() {
+function JSONPDAO() {
+
+};
+
+JSONPDAO.prototype.send = function() {
+	
 	var script = document.createElement("script");
 	script.setAttribute("type", "text/javascript");
-	script.setAttribute("src","//localhost:35729/livereload.js");
+	script.setAttribute("src", "");
 	document.body.appendChild(script);
-})();
+
+};

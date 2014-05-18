@@ -1,7 +1,7 @@
 // ConsoleLogOveridder.js
 
 
-function ConsoleLogOveridder(logLevel) {
+function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 
 	/**
 	 * Default colors to use for the corresponding log levels by index.
@@ -13,12 +13,12 @@ function ConsoleLogOveridder(logLevel) {
 	 * The numerical weight assigned to each log level that determines the minimum log message type
 	 * to be captured. If set to DEBUG, all logs are captured.
 	 */
-	var LogLevelEnum = {DEBUG: 0, LOG: 1, INFO: 2, WARN: 3, ERROR: 4};
+	var LOG_LEVEL = {DEBUG: 0, LOG: 1, INFO: 2, WARN: 3, ERROR: 4};
 
 	/**
 	 * The log level represening the lowest log level to report. 
 	 */
-	logLevel = logLevel || LogLevelEnum.INFO;
+	logLevel = logLevel || LOG_LEVEL.INFO;
 
 	/**
 	 * If true, show timestamps in console logs and log bundles.
@@ -55,19 +55,19 @@ function ConsoleLogOveridder(logLevel) {
 		/** arguments for original fn **/
 		return function() {
 		
-			if(logLevelEnum[legacyFn.name.toUpperCase()] >= logLevel()) {
+			if(LOG_LEVEL[legacyFn.name.toUpperCase()] >= logLevel) {
 				var args = [];
 			    if(typeof(arguments[0]) == "string") {
 			        
 				    // apply color to console logs
 			        args[0] = "%c" + legacyFn.name + " :: " + getLogTimeWithColons() + arguments[0];
-					args[1] = "color:" + logLevelColors[LogLevelEnum[legacyFn.name.toUpperCase()]];
+					args[1] = "color:" + logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]];
 				
 					// pass in as arguments to original function
 					legacyFn.apply(this, args);
                 
                     arguments[0] = legacyFn.name + " :: " + getLogTimeWithColons() + arguments[0];
-                    processLogs(arguments[0], logLevelColors[LogLevelEnum[legacyFn.name.toUpperCase()]]);
+                    logProcessor.processLogs(arguments[0], logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]]);
                 
                 } else {
                 
@@ -97,6 +97,56 @@ function ConsoleLogOveridder(logLevel) {
 				
 			} 
 			
+		};
+
+	};
+
+
+	/**
+	 * Overriddes/extends window.onerror with a log processor. This captures line numbers, as well as the 
+	 * name of the file where the error occurs. See http://stackoverflow.com/q/17712995/552792
+	 *
+	 * @param {Function} legacyFn The original onerror function, which becomes a delegate in the new one.
+	 * @return {Function} The new overridden function, which delegates to the legacyFn. 
+	 */
+	this.overrideError = function(legacyFn) {  
+			
+		/** arguments for original fn **/
+		return function() {
+
+			var message = arguments[0];
+			var file = arguments[1];
+			var line = arguments[2];
+			var position = arguments[3];
+			var error = arguments[4];
+
+			//_console.log(arguments[0] + " : " + arguments[1] + " : " + arguments[2] + " : " + arguments[3] + " : " + arguments[4]);		
+			var args = [];
+			if(typeof(arguments[0]) == "string") {
+				
+				// apply color to console logs
+				args[0] = legacyFn.name + " :: " + arguments[0];
+				args[1] = "color:" + logHandler.logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]];
+			
+				// pass in as arguments to original function
+				//legacyFn.apply(this, args);		
+				//args[0] += "\n" + logHandler.getStackTrace();   
+			    var fileArr = file.split("\/");
+			    var filePath = fileArr[fileArr.length-1];
+
+			    args[0] += "  ("+filePath+":"+line+")";
+				logProcessor.processLogs(args[0], logHandler.logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]]);
+				//_console.error("E : " + arguments[0] + " : " + arguments[1] + " : " + arguments[2] + " : " + arguments[3] + " : " + arguments[4]);		
+
+			} else {
+			
+				// if not a string, don't manipulate the arguments, as it corrupts objects being printed
+				legacyFn.apply(this, arguments);
+				
+				args[0] = legacyFn.name + " :: " + JSON.stringify(arguments[0]);
+				
+			}			
+			//return legacyFn.apply(this, arguments);
 		};
 
 	};

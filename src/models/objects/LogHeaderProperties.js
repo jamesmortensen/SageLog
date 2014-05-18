@@ -1,0 +1,7 @@
+// LogHeaderProperties.js
+
+function LogHeaderProperties() {
+
+};
+
+

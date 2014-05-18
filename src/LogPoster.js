@@ -1,7 +1,0 @@
-// LogPoster.js
-
-
-function LogPoster() {
-	
-
-};
