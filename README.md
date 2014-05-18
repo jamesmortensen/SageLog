@@ -6,7 +6,60 @@
 This package overrides the console logs in Chrome and stores the logs in an array for uploading
 to a third-party server. The console logs are also color coded for easier readability.
 
-## Initialize
+
+## Testing
+
+First, install all dependencies:
+
+```
+$ npm install
+```
+
+Then to test from the terminal, run:
+
+```
+$ npm test
+```
+
+## Develop
+
+To rerun tests continuously while watching for changes, run:
+
+```
+$ npm run watch
+```
+
+And, to view the tests in the browser, start the http server:
+
+```
+$ npm start
+```
+
+then in your browser, go to [http://localhost:8090/tests/_SpecRunner.html](http://localhost:8090/tests/_SpecRunner.html). This page also live reloads when making changes.
+
+
+## Documentation
+
+To see project documentation, run the following commands:
+
+```
+$ npm run jsdoc && npm start
+```
+
+Then see [http://localhost:8090/doc/](http://localhost:8090/doc/).
+
+## Getting Started
+
+To use SageLog in your project, build it with the following command:
+
+```
+$ npm run min
+```
+
+This minifies and bundles the sources in dist/SageLog.js and dist/SageLog.min.js. Include one of the two files in all of your Web pages where you intend to capture logs.
+
+
+### Initialize
 
 To initialize the logger, once logHandler loads, call:
 
@@ -15,7 +68,7 @@ logHandler.init({"captureLogs":true});
 ```
 
 
-## Set Log Levels:
+### Set Log Levels:
  
 DEBUG - Highest. Everything is logged.
 LOG - Default logging level. Everything from here to error is logged.
@@ -29,16 +82,12 @@ To change logging level, pass the level in as another property of the options ob
 logHandler.init({"captureLogs":true, "logLevel":logHandler.logLevels.DEBUG});
 ```
 
-## Disabling
 
-To disable, simply change captureLogs to "false" or remove the init invocation.
-
-
-## API
+### API
 
 - uploadLogsToServer:  Upload the logs 
 
 
-# License
+## License
 
 Copyright 2014, James Mortensen, MIT License.
