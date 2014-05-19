@@ -22,4 +22,8 @@ function LogBundle(maxLogLength) {
         this.length = logMessagesArray.length;
     };
 
+
+    this.getLogBundleAsArray = function() {
+    	return logMessagesArray;
+    };
 };

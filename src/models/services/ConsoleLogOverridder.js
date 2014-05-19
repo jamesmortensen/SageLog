@@ -52,6 +52,8 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 	 */
 	this.overrideLogs = function(legacyFn) {  
 			
+		var logEmitter = new LogEmitter();
+
 		/** arguments for original fn **/
 		return function() {
 		
@@ -64,7 +66,7 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 					args[1] = "color:" + logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]];
 				
 					// pass in as arguments to original function
-					legacyFn.apply(this, args);
+					logEmitter.logMessage(legacyFn, this, args);
                 
                     arguments[0] = legacyFn.name + " :: " + getLogTimeWithColons() + arguments[0];
                     logProcessor.processLogs(arguments[0], logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]]);
@@ -72,7 +74,7 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
                 } else {
                 
                     // if not a string, don't manipulate the arguments, as it corrupts objects being printed
-                    legacyFn.apply(this, arguments);
+					logEmitter.logMessage(legacyFn, this, args);
                     
 
                 	/**
@@ -109,7 +111,9 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 	 * @param {Function} legacyFn The original onerror function, which becomes a delegate in the new one.
 	 * @return {Function} The new overridden function, which delegates to the legacyFn. 
 	 */
-	this.overrideError = function(legacyFn) {  
+	this.overrideError = function(legacyFn) {
+
+		var logEmitter = new LogEmitter();
 			
 		/** arguments for original fn **/
 		return function() {
@@ -126,7 +130,7 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 				
 				// apply color to console logs
 				args[0] = legacyFn.name + " :: " + arguments[0];
-				args[1] = "color:" + logHandler.logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]];
+				args[1] = "color:" + logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]];
 			
 				// pass in as arguments to original function
 				//legacyFn.apply(this, args);		
@@ -135,13 +139,13 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 			    var filePath = fileArr[fileArr.length-1];
 
 			    args[0] += "  ("+filePath+":"+line+")";
-				logProcessor.processLogs(args[0], logHandler.logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]]);
+				logProcessor.processLogs(args[0], logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]]);
 				//_console.error("E : " + arguments[0] + " : " + arguments[1] + " : " + arguments[2] + " : " + arguments[3] + " : " + arguments[4]);		
 
 			} else {
 			
 				// if not a string, don't manipulate the arguments, as it corrupts objects being printed
-				legacyFn.apply(this, arguments);
+				logEmitter.logMessage(legacyFn, this, arguments);
 				
 				args[0] = legacyFn.name + " :: " + JSON.stringify(arguments[0]);
 				

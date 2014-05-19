@@ -16,7 +16,7 @@
 	 * @this {SageLog}
 	 * @param {} 
 	 */
-	function SageLog(options, _console) {
+	function SageLog(_console) {
 		//this.constructor = function SageLog(options) { init(options); }
 		//this.name = "SageLog";
 		_console = _console || console;
@@ -55,6 +55,9 @@
 		//var consoleLogOverridder;
 		var sageHeaderProps;
 
+		var logBundle;
+		var logProcessor;
+
 
 		/**
 		 * Initialize the system and load configuration:
@@ -72,8 +75,11 @@
 		 * @param {Object} options The options to pass into the initialize method to configure SageLogs.
 		 */
 	    this.init = function(options) {
+
+	    	logBundle = new LogBundle();
+		    logProcessor = new LogProcessor(logBundle);
 			
-			_console.log(options.logLevel);
+			_console.log("Log level set to " + options.logLevel);
 			logLevel = options.logLevel !== undefined ? options.logLevel : logLevel;
 			timestampsEnabled = options.showTimestamps !== undefined ? options.showTimestamps : timestampsEnabled;
 			
@@ -94,9 +100,7 @@
 		 * @private
 		 */
 	    function overrideConsoleLogsIfEnabled() {
-
-	    	var logBundle = new LogBundle();
-	    	var logProcessor = new LogProcessor(logBundle);
+	    	
 	    	var consoleLogOverridder = new ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled);
 
 			_console.trace = consoleLogOverridder.overrideLogs(_console.trace);
@@ -123,6 +127,21 @@
 		this.getLogLevel = function() { 
 			return logLevel;
 		};
+
+
+		/**
+		 * Send the logs from this context to the server.
+		 */
+		 this.sendLogsToServer = function() {
+
+		 };
+
+
+		 this.getLogBundleAsArray = function() {
+		 	if(logBundle) {
+		 		return logBundle.getLogBundleAsArray();
+		 	}
+		 };
 
 	};
 
