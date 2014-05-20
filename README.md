@@ -70,11 +70,11 @@ logHandler.init({"captureLogs":true});
 
 ### Set Log Levels:
  
-DEBUG - Highest. Everything is logged.
-LOG - Default logging level. Everything from here to error is logged.
-INFO - Only info, warn, and error messages are logged.
-WARN - Only warn and error messages are logged.
-ERROR - Lowest. Only errors are logged at this level.
+- DEBUG - Highest. Everything is logged.
+- LOG - Default logging level. Everything from here to error is logged.
+- INFO - Only info, warn, and error messages are logged.
+- WARN - Only warn and error messages are logged.
+- ERROR - Lowest. Only errors are logged at this level.
  
 To change logging level, pass the level in as another property of the options object:
     
