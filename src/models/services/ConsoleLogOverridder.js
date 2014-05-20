@@ -65,7 +65,7 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 			        args[0] = "%c" + legacyFn.name + " :: " + getLogTimeWithColons() + arguments[0];
 					args[1] = "color:" + logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]];
 				
-					// pass in as arguments to original function
+					// pass in as arguments to original function and show message on console
 					logEmitter.logMessage(legacyFn, this, args);
                 
                     arguments[0] = legacyFn.name + " :: " + getLogTimeWithColons() + arguments[0];
