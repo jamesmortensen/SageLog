@@ -33,8 +33,12 @@
 		 	WARN: 3,
 		 	ERROR: 4
 		};
-		
-		var consoleLogsAreNowOveridden = false;
+
+		/**
+		 * Default colors to use for the corresponding log levels by index.
+		 *
+		 *                      DEBUG       LOG       INFO       WARN     ERROR    */
+		var logLevelColors = ['#4169E1', '#9400D3', '#006400', '#DAA520', 'red'];
 
 		/**
 		 * The maximum number of log records to store in the queue at one time.
@@ -52,11 +56,13 @@
 		 */
 		var timestampsEnabled = false;
 
+		var consoleLogsAreNowOveridden = false;
+
 		//var consoleLogOverridder;
 		var sageHeaderProps;
 
 		var logBundle;
-		var logProcessor;
+		var logStorer;
 
 
 		/**
@@ -77,7 +83,7 @@
 	    this.init = function(options) {
 
 	    	logBundle = new LogBundle();
-		    logProcessor = new LogProcessor(logBundle);
+		    logStorer = new LogStorer(logBundle, window.location.pathname);
 			
 			_console.log("Log level set to " + options.logLevel);
 			logLevel = options.logLevel !== undefined ? options.logLevel : logLevel;
@@ -101,7 +107,10 @@
 		 */
 	    function overrideConsoleLogsIfEnabled() {
 	    	
-	    	var consoleLogOverridder = new ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled);
+	    	var logEmitter = new LogEmitter();
+	    	var consoleLogProcessor = new ConsoleLogProcessor(logEmitter, logLevelColors, timestampsEnabled, LOG_LEVELS);
+	    	var storedLogProcessor = new StoredLogProcessor(logStorer, logLevelColors, timestampsEnabled, LOG_LEVELS);
+	    	var consoleLogOverridder = new ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel, timestampsEnabled);
 
 			_console.trace = consoleLogOverridder.overrideLogs(_console.trace);
 			_console.log = consoleLogOverridder.overrideLogs(_console.log);

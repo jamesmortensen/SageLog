@@ -1,7 +1,13 @@
 // ConsoleLogOveridder.js
 
-
-function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
+/**
+ * This decorates the console logs with additional functionality. The console logs are decorated by the
+ * consoleLogProcessor to change their appearance prior to being emitted to the Developer Tools, then
+ * they're decorated by the storedLogProcessor prior to being stored. The stored logs are held for
+ * transfer to remote servers for analysis.
+ *
+ */
+function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel, timestampsEnabled) {
 
 	/**
 	 * Default colors to use for the corresponding log levels by index.
@@ -13,12 +19,12 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 	 * The numerical weight assigned to each log level that determines the minimum log message type
 	 * to be captured. If set to DEBUG, all logs are captured.
 	 */
-	var LOG_LEVEL = {DEBUG: 0, LOG: 1, INFO: 2, WARN: 3, ERROR: 4};
+	var LOG_LEVELS = {DEBUG: 0, LOG: 1, INFO: 2, WARN: 3, ERROR: 4};
 
 	/**
 	 * The log level represening the lowest log level to report. 
 	 */
-	logLevel = logLevel || LOG_LEVEL.INFO;
+	logLevel = logLevel || LOG_LEVELS.INFO;
 
 	/**
 	 * If true, show timestamps in console logs and log bundles.
@@ -57,24 +63,20 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 		/** arguments for original fn **/
 		return function() {
 		
-			if(LOG_LEVEL[legacyFn.name.toUpperCase()] >= logLevel) {
+			if(LOG_LEVELS[legacyFn.name.toUpperCase()] >= logLevel) {
 				var args = [];
 			    if(typeof(arguments[0]) == "string") {
 			        
-				    // apply color to console logs
-			        args[0] = "%c" + legacyFn.name + " :: " + getLogTimeWithColons() + arguments[0];
-					args[1] = "color:" + logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]];
-				
-					// pass in as arguments to original function and show message on console
-					logEmitter.logMessage(legacyFn, this, args);
+			        args = arguments;
+				    consoleLogProcessor.processLog(legacyFn, this, args);                
+
+                    storedLogProcessor.processLog(legacyFn, this, arguments);
                 
-                    arguments[0] = legacyFn.name + " :: " + getLogTimeWithColons() + arguments[0];
-                    logProcessor.processLogs(arguments[0], logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]]);
-                
+
                 } else {
                 
                     // if not a string, don't manipulate the arguments, as it corrupts objects being printed
-					logEmitter.logMessage(legacyFn, this, args);
+					logEmitter.logMessage(legacyFn, this, arguments);
                     
 
                 	/**
@@ -130,7 +132,7 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 				
 				// apply color to console logs
 				args[0] = legacyFn.name + " :: " + arguments[0];
-				args[1] = "color:" + logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]];
+				args[1] = "color:" + logLevelColors[LOG_LEVELS[legacyFn.name.toUpperCase()]];
 			
 				// pass in as arguments to original function
 				//legacyFn.apply(this, args);		
@@ -139,7 +141,7 @@ function ConsoleLogOverridder(logProcessor, logLevel, timestampsEnabled) {
 			    var filePath = fileArr[fileArr.length-1];
 
 			    args[0] += "  ("+filePath+":"+line+")";
-				logProcessor.processLogs(args[0], logLevelColors[LOG_LEVEL[legacyFn.name.toUpperCase()]]);
+				logProcessor.processLogs(args[0], logLevelColors[LOG_LEVELS[legacyFn.name.toUpperCase()]]);
 				//_console.error("E : " + arguments[0] + " : " + arguments[1] + " : " + arguments[2] + " : " + arguments[3] + " : " + arguments[4]);		
 
 			} else {

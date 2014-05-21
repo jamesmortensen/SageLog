@@ -2,6 +2,6 @@
 
 function LogEmitter() {}
 
-LogEmitter.prototype.logMessage = function(legacyFn, _this, args) {
-	legacyFn.apply(_this, args);
+LogEmitter.prototype.logMessage = function(legacyFn, _this, consoleLogArguments) {
+	legacyFn.apply(_this, consoleLogArguments);
 };

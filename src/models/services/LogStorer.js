@@ -1,13 +1,13 @@
-// LogProcessor.js
+// LogStorer.js
 
 
-function LogProcessor(logBundle) {
+function LogStorer(logBundle, locationPathname) {
 
 	// TODO: Do we really want to do this on the client side? 
-	this.processLogs = function(data, color) {
+	this.storeLog = function(data, color) {
 
 		var prefix = "";
-		prefix = window.location.pathname + " :: ";
+		prefix = locationPathname + " :: ";
 		
 		// HTML-encode '<' and '>'
 		logBundle.push('<font color="'+color+'"><pre>' + prefix + data.replace(/</gm,'&lt;').replace(/>/gm,'&gt;') + "</pre></font>");

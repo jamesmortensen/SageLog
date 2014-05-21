@@ -82,6 +82,21 @@ describe("Collecting logs", function() {
     });
 
 
+    it("Should print out an object passed into a log function, without any processing or storing", function() {
+
+    	logHandler.init({
+			"captureLogs": true, 
+			"logLevel": 0
+		});
+    	
+    	fakeConsole.info({name: "James"});
+    	var logArray = logHandler.getLogBundleAsArray();
+
+		console.debug("logsCollected length = " + logArray.length + " (should be 0)");
+    	expect(logArray.length).toEqual(0);
+    });
+
+
     /*it("Should throw an error in the console and also store that error", function() {
     	// TODO: Need to get this working
     	//ttt();
