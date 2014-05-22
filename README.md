@@ -90,4 +90,4 @@ logHandler.init({"captureLogs":true, "logLevel":logHandler.logLevels.DEBUG});
 
 ## License
 
-Copyright 2014, James Mortensen, MIT License.
+Copyright 2014, James Mortensen ([@jmort253](https://twitter.com/jmort253)), MIT License.
