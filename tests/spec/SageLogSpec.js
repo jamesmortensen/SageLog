@@ -31,11 +31,39 @@ describe("Collecting logs", function() {
 	});
 
 
+    it("should log and collect everything", function(done) {
+        
+        logHandler.init({
+            "captureLogs": true, 
+            "logLevel": SageLog.DEBUG
+        });
+
+        fakeConsole.info('hello world');
+        fakeConsole.error('hello test');       // only ERROR is logged
+        fakeConsole.log('hello nobody');
+        fakeConsole.debug('hello invisible');
+        fakeConsole.warn('hello careful');
+
+        setTimeout(function() {
+            var logArray = logHandler.getLogBundleAsArray();
+
+            console.debug("logsCollected = " + logArray);
+            expect(logArray[0].match(/hello world/)).toEqual(['hello world']);
+            expect(logArray[1].match(/hello test/)).toEqual(['hello test']);
+            expect(logArray[2].match(/hello nobody/)).toEqual(['hello nobody']);
+            expect(logArray[3].match(/hello invisible/)).toEqual(['hello invisible']);
+            expect(logArray[4].match(/hello careful/)).toEqual(['hello careful']);
+            expect(logArray.length).toEqual(5);
+            done();         
+        },1000);
+    });
+
+
     it("Should set the logging level to INFO and not collect LOG or DEBUG logs", function(done) {
 		
     	logHandler.init({
 			"captureLogs": true, 
-			"logLevel": 0
+			"logLevel": SageLog.INFO
 		});
     	
     	fakeConsole.info('hello world');

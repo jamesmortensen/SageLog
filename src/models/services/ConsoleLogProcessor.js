@@ -34,4 +34,15 @@ function ConsoleLogProcessor(logEmitter, logLevelColors, timestampsEnabled, LOG_
 		logEmitter.logMessage(legacyFn, _this, processedLogArguments);
 
 	};
+
+
+	this.processErrorLog = function(legacyFn, _this, errorLogArguments) {
+
+	};
+
+
+	this.emitLog = function(legacyFn, _this, consoleLogArguments) {
+		// pass in as arguments to original function and show message on console
+		logEmitter.logMessage(legacyFn, _this, consoleLogArguments);
+	};
 };

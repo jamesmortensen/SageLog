@@ -10,12 +10,6 @@
 function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel, timestampsEnabled) {
 
 	/**
-	 * Default colors to use for the corresponding log levels by index.
-	 *
-	 *                      DEBUG       LOG       INFO       WARN     ERROR    */
-	var logLevelColors = ['#4169E1', '#9400D3', '#006400', '#DAA520', 'red'];
-
-	/**
 	 * The numerical weight assigned to each log level that determines the minimum log message type
 	 * to be captured. If set to DEBUG, all logs are captured.
 	 */
@@ -24,7 +18,7 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 	/**
 	 * The log level represening the lowest log level to report. 
 	 */
-	logLevel = logLevel || LOG_LEVELS.INFO;
+	//logLevel = logLevel || LOG_LEVELS.INFO;
 
 	/**
 	 * If true, show timestamps in console logs and log bundles.
@@ -32,6 +26,8 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 	timestampsEnabled = timestampsEnabled || false;
 
 
+	// TODO: Figure out what we're going to do about this being duplicated everywhere and
+	 // TODO: if we even want to try to style stored logs before sending to a server.
 	/**
 	 * Creates a timestamp if the enableTimestamps option is set upon initialization.
 	 *
@@ -58,7 +54,7 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 	 */
 	this.overrideLogs = function(legacyFn) {  
 			
-		var logEmitter = new LogEmitter();
+		//var logEmitter = new LogEmitter();
 
 		/** arguments for original fn **/
 		return function() {
@@ -76,7 +72,8 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
                 } else {
                 
                     // if not a string, don't manipulate the arguments, as it corrupts objects being printed
-					logEmitter.logMessage(legacyFn, this, arguments);
+					//logEmitter.logMessage(legacyFn, this, arguments);
+					consoleLogProcessor.emitLog(legacyFn, this, arguments);  
                     
 
                 	/**
@@ -131,8 +128,12 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 			if(typeof(arguments[0]) == "string") {
 				
 				// apply color to console logs
-				args[0] = legacyFn.name + " :: " + arguments[0];
-				args[1] = "color:" + logLevelColors[LOG_LEVELS[legacyFn.name.toUpperCase()]];
+//				args[0] = legacyFn.name + " :: " + arguments[0];
+//				args[1] = "color:" + logLevelColors[LOG_LEVELS[legacyFn.name.toUpperCase()]];
+				args = arguments;
+			    //consoleLogProcessor.processLog(legacyFn, this, args);                
+
+                
 			
 				// pass in as arguments to original function
 				//legacyFn.apply(this, args);		
@@ -141,8 +142,10 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 			    var filePath = fileArr[fileArr.length-1];
 
 			    args[0] += "  ("+filePath+":"+line+")";
-				logProcessor.processLogs(args[0], logLevelColors[LOG_LEVELS[legacyFn.name.toUpperCase()]]);
+				consoleLogProcessor.processErrorLog(legacyFn, this, args);
 				//_console.error("E : " + arguments[0] + " : " + arguments[1] + " : " + arguments[2] + " : " + arguments[3] + " : " + arguments[4]);		
+
+				//storedLogProcessor.processLog(legacyFn, this, arguments);
 
 			} else {
 			
