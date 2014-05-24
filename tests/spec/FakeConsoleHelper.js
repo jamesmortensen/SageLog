@@ -14,7 +14,7 @@
 	 * @return A cloned object containing the same functionality and properties as console.
 	 */
 	FakeConsoleHelper.makeFakeConsole = function(_console) {
-	  var clonedConsole = {};
+	  var clonedConsole = new function FakeConsole(){};
 	  for(var k in _console) {
 	  	  if(typeof _console[k] == 'function') {
 	  	  	  //console.debug("override function: " + _console[k]);

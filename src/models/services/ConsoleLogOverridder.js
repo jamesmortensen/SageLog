@@ -53,11 +53,10 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 	 * @return {Function} The new overridden function, which delegates to the legacyFn. 
 	 */
 	this.overrideLogs = function(legacyFn) {  
-			
-		//var logEmitter = new LogEmitter();
+
 
 		/** arguments for original fn **/
-		return function() {
+		function sagelog() {
 		
 			if(LOG_LEVELS[legacyFn.name.toUpperCase()] >= logLevel) {
 				var args = [];
@@ -100,6 +99,8 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 			
 		};
 
+		return function() { sagelog.apply(this, arguments); }
+
 	};
 
 
@@ -113,9 +114,10 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 	this.overrideError = function(legacyFn) {
 
 		var logEmitter = new LogEmitter();
+		
 			
 		/** arguments for original fn **/
-		return function() {
+		function sagelog() {
 
 			var message = arguments[0];
 			var file = arguments[1];
@@ -157,6 +159,8 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 			}			
 			//return legacyFn.apply(this, arguments);
 		};
+
+		return function() { sagelog.apply(this, arguments); }
 
 	};
 	
