@@ -24,7 +24,9 @@ function StoredLogProcessor(logStorer, logLevelColors, timestampsEnabled, LOG_LE
 
 
 	this.processLog = function(legacyFn, _this, consoleLogArguments) {
-		consoleLogArguments[0] = legacyFn.name + " :: " + getLogTimeWithColons() + consoleLogArguments[0];
-        logStorer.storeLog(consoleLogArguments[0], logLevelColors[LOG_LEVELS[legacyFn.name.toUpperCase()]]);
+		//consoleLogArguments[0] = legacyFn.name + " :: " + getLogTimeWithColons() + consoleLogArguments[0];
+		var logEntryLevel = legacyFn.name;
+		var logColor = logLevelColors[LOG_LEVELS[legacyFn.name.toUpperCase()]];
+        logStorer.storeLog(logEntryLevel, consoleLogArguments, logColor, timestampsEnabled, LOG_LEVELS);
 	};
 };
