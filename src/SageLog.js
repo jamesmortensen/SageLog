@@ -1,7 +1,7 @@
 // SageLogController.js
 
 /**
- * Creates an instance of SageLog.
+ * Creates an instance of SageLogs.
  *
  * @constructor
  * @this {SageLog}
@@ -10,14 +10,14 @@
 (function() {
 
 	/**
-	 * Creates an instance of SageLog.
+	 * Creates an instance of SageLogs.
 	 *
 	 * @constructor
 	 * @this {SageLog}
 	 * @param {} 
 	 */
-	function SageLog(_console) {
-		//this.constructor = function SageLog(options) { init(options); }
+	function SageLogs(_console) {
+		//this.constructor = function SageLogs(options) { init(options); }
 		//this.name = "SageLog";
 		_console = _console || console;
 
@@ -77,7 +77,7 @@
 		 *     "logPosterCallback": uploadLogsToMyServer  // your callback function to send logs to remote endpoint.
 		 *     "showTimestamps": false 
 		 * };
-		 * sageLog.init(options);
+		 * SageLogs.init(options);
 		 * @param {Object} options The options to pass into the initialize method to configure SageLogs.
 		 */
 	    this.init = function(options) {
@@ -159,13 +159,13 @@
 	 * The numerical weight assigned to each log level that determines the minimum log message type
 	 * to be captured. If set to DEBUG, all logs are captured.
 	 */
-	SageLog.prototype.DEBUG = SageLog.DEBUG = 0;
-	SageLog.prototype.LOG = SageLog.LOG = 1;
-	SageLog.prototype.INFO = SageLog.INFO = 2;
-	SageLog.prototype.WARN = SageLog.WARN = 3;
-	SageLog.prototype.ERROR = SageLog.ERROR = 4;
+	SageLogs.prototype.DEBUG = SageLogs.DEBUG = 0;
+	SageLogs.prototype.LOG = SageLogs.LOG = 1;
+	SageLogs.prototype.INFO = SageLogs.INFO = 2;
+	SageLogs.prototype.WARN = SageLogs.WARN = 3;
+	SageLogs.prototype.ERROR = SageLogs.ERROR = 4;
 
 
-	window.SageLog = SageLog;
+	window.SageLog = SageLogs;
 
 })();

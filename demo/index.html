@@ -28,15 +28,15 @@
       <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
                     <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
                                    <link rel="shortcut icon" href="../assets/ico/favicon.png">
-     <script type="text/javascript" src="../src/SageLog.js"></script>
+     <script type="text/javascript" src="../dist/SageLog.js"></script>
      <script type="text/javascript">
-         
-         logHandler.init({"captureLogs":true, "logLevel":logHandler.logLevels.INFO, "logPosterCallback":
+         var logHandler = new SageLog();
+         logHandler.init({"captureLogs":true, "logLevel":0});/*, "logPosterCallback":
             function(obj) {
                 console.info("Here's where you submit the logs to the server");
             }
-         });
-         logHandler.setLogLevel(logHandler.logLevels.DEBUG);
+         });*/
+         //logHandler.setLogLevel(logHandler.logLevels.DEBUG);
 
          console.info("logHandler is initialized");
          console.debug("this is a debug");
@@ -166,10 +166,10 @@ $(function ()
 
 $(document).ready(function() {
 // initialize log capturer
-        logHandler.init({"captureLogs":true, "logLevel":logHandler.logLevels.INFO});
+  //      logHandler.init({"captureLogs":true, "logLevel":logHandler.logLevels.INFO});
 	
 	// let's users force DEBUG mode on a case by case basis
-	logHandler.setLogLevel(logHandler.logLevels.DEBUG);
+//	logHandler.setLogLevel(logHandler.logLevels.DEBUG);
 
 });
 

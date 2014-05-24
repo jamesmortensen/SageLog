@@ -107,6 +107,21 @@ describe("Collecting logs", function() {
 		//console.log('logs after error = ' + logHandler.getLogBundleAsArray().length);
     });*/
 
+    // Uncomment to run performance tests
+    /*it("Should be able to handle 10000 log entries without performance degradation", function() {
 
+        var start = new Date().getTime();
+        logHandler.init({
+            "captureLogs": true, 
+            "logLevel": 0
+        });
+
+        for(var i = 0; i < 10000; i++) {
+            fakeConsole.info("This is an automated test message number " + i);
+        }
+
+        var stop = new Date().getTime();
+        console.debug("Total Run Time = " + (stop - start) + "ms");
+    });*/
 
 });
