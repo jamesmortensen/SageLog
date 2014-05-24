@@ -1,8 +1,8 @@
 // logsSpec.js
 
-describe("Collecting logs", function() {
-	"use strict";
 
+describe("SageLog", function() {
+    "use strict";
 
     /**
      * PhantomJS doesn't like overridding console in beforeEach and it blocks, so we create a masterFakeConsole 
@@ -23,133 +23,137 @@ describe("Collecting logs", function() {
      * every test starts with fresh data and a fresh context.
      */
     var logHandler;
+    
+
+    describe("Collecting logs", function() {
 
 
-    beforeEach(function() {
-	    fakeConsole = FakeConsoleHelper.makeFakeConsole(masterFakeConsole);     // make fake console copy
-	    logHandler = new SageLog(fakeConsole);
-	});
+        beforeEach(function() {
+    	    fakeConsole = FakeConsoleHelper.makeFakeConsole(masterFakeConsole);     // make fake console copy
+    	    logHandler = new SageLog(fakeConsole);
+    	});
 
 
-    it("should log and collect everything", function(done) {
-        
-        logHandler.init({
-            "captureLogs": true, 
-            "logLevel": SageLog.DEBUG
+        it("should log and collect everything", function(done) {
+            
+            logHandler.init({
+                "captureLogs": true, 
+                "logLevel": SageLog.DEBUG
+            });
+
+            fakeConsole.info('hello world');
+            fakeConsole.error('hello test');       // only ERROR is logged
+            fakeConsole.log('hello nobody');
+            fakeConsole.debug('hello invisible');
+            fakeConsole.warn('hello careful');
+
+            setTimeout(function() {
+                var logArray = logHandler.getLogBundleAsArray();
+
+                console.debug("logsCollected = " + logArray);
+                expect(logArray[0].match(/hello world/)).toEqual(['hello world']);
+                expect(logArray[1].match(/hello test/)).toEqual(['hello test']);
+                expect(logArray[2].match(/hello nobody/)).toEqual(['hello nobody']);
+                expect(logArray[3].match(/hello invisible/)).toEqual(['hello invisible']);
+                expect(logArray[4].match(/hello careful/)).toEqual(['hello careful']);
+                expect(logArray.length).toEqual(5);
+                done();         
+            },1000);
         });
 
-        fakeConsole.info('hello world');
-        fakeConsole.error('hello test');       // only ERROR is logged
-        fakeConsole.log('hello nobody');
-        fakeConsole.debug('hello invisible');
-        fakeConsole.warn('hello careful');
 
-        setTimeout(function() {
-            var logArray = logHandler.getLogBundleAsArray();
+        it("Should set the logging level to INFO and not collect LOG or DEBUG logs", function(done) {
+    		
+        	logHandler.init({
+    			"captureLogs": true, 
+    			"logLevel": SageLog.INFO
+    		});
+        	
+        	fakeConsole.info('hello world');
+        	fakeConsole.error('hello test');
+        	fakeConsole.log('hello nobody');
+        	fakeConsole.debug('hello invisible');
+        	fakeConsole.warn('hello careful');
 
-            console.debug("logsCollected = " + logArray);
-            expect(logArray[0].match(/hello world/)).toEqual(['hello world']);
-            expect(logArray[1].match(/hello test/)).toEqual(['hello test']);
-            expect(logArray[2].match(/hello nobody/)).toEqual(['hello nobody']);
-            expect(logArray[3].match(/hello invisible/)).toEqual(['hello invisible']);
-            expect(logArray[4].match(/hello careful/)).toEqual(['hello careful']);
-            expect(logArray.length).toEqual(5);
-            done();         
-        },1000);
-    });
+        	logHandler.sendLogsToServer();
+        	setTimeout(function() {
+    	    	var logArray = logHandler.getLogBundleAsArray();
 
-
-    it("Should set the logging level to INFO and not collect LOG or DEBUG logs", function(done) {
-		
-    	logHandler.init({
-			"captureLogs": true, 
-			"logLevel": SageLog.INFO
-		});
-    	
-    	fakeConsole.info('hello world');
-    	fakeConsole.error('hello test');
-    	fakeConsole.log('hello nobody');
-    	fakeConsole.debug('hello invisible');
-    	fakeConsole.warn('hello careful');
-
-    	logHandler.sendLogsToServer();
-    	setTimeout(function() {
-	    	var logArray = logHandler.getLogBundleAsArray();
-
-			console.debug("logsCollected = " + logArray);
-			expect(logArray[0].match(/hello world/)).toEqual(['hello world']);
-			expect(logArray[1].match(/hello test/)).toEqual(['hello test']);
-			expect(logArray[2].match(/hello careful/)).toEqual(['hello careful']);
-			expect(logArray.length).toEqual(3);
-			done();			
-	    },1000);
-    });
-
-
-    it("should only log errors and nothing else", function(done) {
-   	    
-    	logHandler.init({
-			"captureLogs": true, 
-			"logLevel": SageLog.ERROR
-		});
-
-    	fakeConsole.info('hello world');
-    	fakeConsole.error('hello test');       // only ERROR is logged
-    	fakeConsole.log('hello nobody');
-    	fakeConsole.debug('hello invisible');
-    	fakeConsole.warn('hello careful');
-
-    	setTimeout(function() {
-	    	var logArray = logHandler.getLogBundleAsArray();
-
-			console.debug("logsCollected = " + logArray);
-			expect(logArray[0].match(/hello test/)).toEqual(['hello test']);
-			expect(logArray.length).toEqual(1);
-			done();			
-	    },1000);
-    });
-
-
-    it("Should print out an object passed into a log function, without any processing or storing", function() {
-
-    	logHandler.init({
-			"captureLogs": true, 
-			"logLevel": 0
-		});
-    	
-    	fakeConsole.info({name: "James"});
-    	var logArray = logHandler.getLogBundleAsArray();
-
-		console.debug("logsCollected length = " + logArray.length + " (should be 0)");
-    	expect(logArray.length).toEqual(0);
-    });
-
-
-    /*it("Should throw an error in the console and also store that error", function() {
-    	// TODO: Need to get this working
-    	//ttt();
-    	//console.log('logs after error = ' + logHandler.getLogBundleAsArray().length);
-    });
-
-    it("should show an error in the logs", function() {
-		//console.log('logs after error = ' + logHandler.getLogBundleAsArray().length);
-    });*/
-
-    // Uncomment to run performance tests
-    /*it("Should be able to handle 10000 log entries without performance degradation", function() {
-
-        var start = new Date().getTime();
-        logHandler.init({
-            "captureLogs": true, 
-            "logLevel": 0
+    			console.debug("logsCollected = " + logArray);
+    			expect(logArray[0].match(/hello world/)).toEqual(['hello world']);
+    			expect(logArray[1].match(/hello test/)).toEqual(['hello test']);
+    			expect(logArray[2].match(/hello careful/)).toEqual(['hello careful']);
+    			expect(logArray.length).toEqual(3);
+    			done();			
+    	    },1000);
         });
 
-        for(var i = 0; i < 10000; i++) {
-            fakeConsole.info("This is an automated test message number " + i);
-        }
 
-        var stop = new Date().getTime();
-        console.debug("Total Run Time = " + (stop - start) + "ms");
-    });*/
+        it("should only log errors and nothing else", function(done) {
+       	    
+        	logHandler.init({
+    			"captureLogs": true, 
+    			"logLevel": SageLog.ERROR
+    		});
 
+        	fakeConsole.info('hello world');
+        	fakeConsole.error('hello test');       // only ERROR is logged
+        	fakeConsole.log('hello nobody');
+        	fakeConsole.debug('hello invisible');
+        	fakeConsole.warn('hello careful');
+
+        	setTimeout(function() {
+    	    	var logArray = logHandler.getLogBundleAsArray();
+
+    			console.debug("logsCollected = " + logArray);
+    			expect(logArray[0].match(/hello test/)).toEqual(['hello test']);
+    			expect(logArray.length).toEqual(1);
+    			done();			
+    	    },1000);
+        });
+
+
+        it("Should print out an object passed into a log function, without any processing or storing", function() {
+
+        	logHandler.init({
+    			"captureLogs": true, 
+    			"logLevel": 0
+    		});
+        	
+        	fakeConsole.info({name: "James"});
+        	var logArray = logHandler.getLogBundleAsArray();
+
+    		console.debug("logsCollected length = " + logArray.length + " (should be 0)");
+        	expect(logArray.length).toEqual(0);
+        });
+
+
+        /*it("Should throw an error in the console and also store that error", function() {
+        	// TODO: Need to get this working
+        	//ttt();
+        	//console.log('logs after error = ' + logHandler.getLogBundleAsArray().length);
+        });
+
+        it("should show an error in the logs", function() {
+    		//console.log('logs after error = ' + logHandler.getLogBundleAsArray().length);
+        });*/
+
+        // Uncomment to run performance tests
+        /*it("Should be able to handle 10000 log entries without performance degradation", function() {
+
+            var start = new Date().getTime();
+            logHandler.init({
+                "captureLogs": true, 
+                "logLevel": 0
+            });
+
+            for(var i = 0; i < 10000; i++) {
+                fakeConsole.info("This is an automated test message number " + i);
+            }
+
+            var stop = new Date().getTime();
+            console.debug("Total Run Time = " + (stop - start) + "ms");
+        });*/
+
+    });
 });
