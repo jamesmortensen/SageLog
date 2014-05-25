@@ -19,7 +19,7 @@ function LogStorer(logBundle, locationPathname) {
 		return logTime + " :: ";
 	};
 
-	// TODO: Do we really want to do this on the client side? 
+	// store the logs in the bundle
 	this.storeLog = function(logEntryLevel, consoleLogArguments, color, timestampsEnabled, LOG_LEVELS) {
 
 		consoleLogArguments[0] = logEntryLevel + " :: " + getLogTimeWithColons() + consoleLogArguments[0];

@@ -156,4 +156,58 @@ describe("SageLog", function() {
         });*/
 
     });
+
+    describe("Collecting Logs as JSON objects", function() {
+
+        beforeEach(function() {
+            fakeConsole = FakeConsoleHelper.makeFakeConsole(masterFakeConsole);     // make fake console copy
+            logHandler = new SageLog(fakeConsole);
+        });
+
+        it("should store INFO logs only, and 2 entries", function() {
+            logHandler.init({
+                "captureLogs": true,
+                "logStorerClassName" : "JsonLogStorer",
+                "logLevel": SageLog.INFO
+            });
+
+            fakeConsole.info('hello world');
+            fakeConsole.error('hello test');       // only ERROR is logged
+            fakeConsole.log('hello nobody');
+            fakeConsole.debug('hello invisible');
+            fakeConsole.warn('hello careful');
+
+            var logArray = logHandler.getLogBundleAsArray();
+
+            expect(logArray.length).toEqual(3);
+        });
+
+        it("should store INFO logs only, and verify data is correct", function() {
+            logHandler.init({
+                "captureLogs": true,
+                "logStorerClassName" : "JsonLogStorer",
+                "logLevel": SageLog.INFO
+            });
+
+            fakeConsole.info('hello world');
+            fakeConsole.error('hello test');       // only ERROR is logged
+            fakeConsole.log('hello nobody');
+            fakeConsole.debug('hello invisible');
+            fakeConsole.warn('hello careful');
+
+            var logArray = logHandler.getLogBundleAsArray();
+
+            var logEntry;
+            logArray.forEach(function(element, index, array) {
+                logEntry = element.getLogEntry();
+                console.debug('logEntry = ' + logEntry.color);
+                if(index == 0)
+                    expect(logEntry.color).toEqual('#006400');
+                if(index == 1)
+                    expect(logEntry.color).toEqual('red');
+                if(index == 2)
+                    expect(logEntry.color).toEqual('#DAA520');
+            });
+        });
+    });
 });

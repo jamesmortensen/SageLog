@@ -83,7 +83,13 @@
 	    this.init = function(options) {
 
 	    	logBundle = new LogBundle();
-		    logStorer = new LogStorer(logBundle, window.location.pathname);
+
+	    	var logStorerClassName = 
+	    		options.logStorerClassName === undefined 
+	    		? 'LogStorer'
+	    		: options.logStorerClassName;
+
+		    logStorer = new window[logStorerClassName](logBundle, window.location.pathname);
 			
 			_console.log("Log level set to " + options.logLevel);
 			logLevel = options.logLevel !== undefined ? options.logLevel : logLevel;
