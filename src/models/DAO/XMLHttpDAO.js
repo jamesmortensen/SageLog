@@ -17,7 +17,7 @@ function XMLHttpDAO() {
 
 
 /**
- * fetches data from a server.
+ * send data to a server.
  *
  * @this {XMLHttpDAO}
  * @param {String} requestUrl The location of the resource represented by a url.
@@ -28,7 +28,7 @@ function XMLHttpDAO() {
  * @param {XMLHttpRequest} _XMLHttpRequest The XMLHttpRequest object used to make the request (or simulate it for testing).
  * @return {Deferred} promise The object containing done, fail, and always callback handlers.
  */
-XMLHttpDAO.prototype.fetchFromServer = function(requestUrl, authorizationKey, httpMethod, dataPayload, observer, _XMLHttpRequest) {
+XMLHttpDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, dataPayload, observer, _XMLHttpRequest) {
 	_XMLHttpRequest = _XMLHttpRequest || XMLHttpRequest;
 	httpMethod = httpMethod || 'GET';
 	observer = observer || new Observer();

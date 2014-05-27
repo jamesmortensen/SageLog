@@ -2,7 +2,7 @@
 
 function JsonLogStorer(logBundle, locationPathname) {
 
-	// TODO: Do we really want to do this on the client side? 
+	
 	this.storeLog = function(logEntryLevel, consoleLogArguments, color) {
 
 		var data = consoleLogArguments[0];

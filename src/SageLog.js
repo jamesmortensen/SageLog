@@ -63,6 +63,7 @@
 
 		var logBundle;
 		var logStorer;
+		var dao;
 
 
 		/**
@@ -102,6 +103,13 @@
 	            overrideConsoleLogsIfEnabled();
 
 	        logHeaderProperties = new LogHeaderProperties();
+
+	        var SenderDao = 
+	        	options.logSenderDao === undefined
+	        	? 'JSONPDAO'
+	        	: options.logSenderDao;
+	        	
+	        dao = new window[SenderDao]();
 	        //logHandlerObj.headerProps = {};
 	    };
 
