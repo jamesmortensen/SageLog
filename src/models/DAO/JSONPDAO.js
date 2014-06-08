@@ -1,14 +1,13 @@
 // JSONPDAO.js
 
 function JSONPDAO() {
-
 };
 
 
 /**
- * send data to a server.
+ * send data to a server using JavaScript script tag remoting / JSONP.
  *
- * @this {XMLHttpDAO}
+ * @this {JSONPDAO}
  * @param {String} requestUrl The location of the resource represented by a url.
  * @param {String} authorizationKey Key used to authenticate the request.
  * @param {String} httpMethod The HTTP method, one of GET, POST, PUT, HEAD, DELETE, CREATE, UPDATE. Default is GET.
@@ -19,19 +18,32 @@ function JSONPDAO() {
  */
 JSONPDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, dataPayload, observer) {
 	observer = observer || new Observer();
-	var jsonPayload;
+	var jsonPayload = { handshake: new Date().getTime() };
 	if(typeof dataPayload === 'undefined') throw new TypeError('dataPayload must be a JSON object.');
 	if(typeof dataPayload == 'object') {
-		payloadString = JSON.stringify(dataPayload);
+		jsonPayload.message = dataPayload;
 	} else {
-		payloadString = dataPayload;
+		jsonPayload.message = JSON.parse(dataPayload);
 	}
+	payloadString = JSON.stringify(jsonPayload);
 
-	var fullUrl = requestUrl + callback + payloadString;
+	var global_observer = 'global_observer' + jsonPayload.handshake;
+	var callback = 'JSONPDAO.' + global_observer + '.resolve';
+	var fullUrl = requestUrl + '?callback=' + callback + '&json=' + payloadString;
 	
 	var script = document.createElement("script");
 	script.setAttribute("type", "text/javascript");
 	script.setAttribute("src", fullUrl);
 	document.body.appendChild(script);
 
+	JSONPDAO[global_observer] = observer;
+	JSONPDAO[global_observer].done(function(data) {
+		delete JSONPDAO[global_observer];
+	});
+
+	return observer;
+
 };
+
+
+//JSONPDAO.global_observer = {};

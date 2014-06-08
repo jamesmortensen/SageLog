@@ -38,11 +38,12 @@ describe("SageLog", function() {
             
             logHandler.init({
                 "captureLogs": true, 
-                "logLevel": SageLog.DEBUG
+                "logLevel": SageLog.DEBUG,
+                "logStorerClassName": "LogStorer"
             });
 
             fakeConsole.info('hello world');
-            fakeConsole.error('hello test');       // only ERROR is logged
+            fakeConsole.error('hello test');
             fakeConsole.log('hello nobody');
             fakeConsole.debug('hello invisible');
             fakeConsole.warn('hello careful');
@@ -66,7 +67,8 @@ describe("SageLog", function() {
     		
         	logHandler.init({
     			"captureLogs": true, 
-    			"logLevel": SageLog.INFO
+    			"logLevel": SageLog.INFO,
+                "logStorerClassName": "LogStorer"
     		});
         	
         	fakeConsole.info('hello world');
@@ -93,7 +95,8 @@ describe("SageLog", function() {
        	    
         	logHandler.init({
     			"captureLogs": true, 
-    			"logLevel": SageLog.ERROR
+    			"logLevel": SageLog.ERROR,
+                "logStorerClassName": "LogStorer"
     		});
 
         	fakeConsole.info('hello world');
@@ -117,7 +120,8 @@ describe("SageLog", function() {
 
         	logHandler.init({
     			"captureLogs": true, 
-    			"logLevel": 0
+    			"logLevel": 0,
+                "logStorerClassName": "LogStorer"
     		});
         	
         	fakeConsole.info({name: "James"});
@@ -172,7 +176,7 @@ describe("SageLog", function() {
             });
 
             fakeConsole.info('hello world');
-            fakeConsole.error('hello test');       // only ERROR is logged
+            fakeConsole.error('hello test');
             fakeConsole.log('hello nobody');
             fakeConsole.debug('hello invisible');
             fakeConsole.warn('hello careful');
@@ -190,7 +194,7 @@ describe("SageLog", function() {
             });
 
             fakeConsole.info('hello world');
-            fakeConsole.error('hello test');       // only ERROR is logged
+            fakeConsole.error('hello test');
             fakeConsole.log('hello nobody');
             fakeConsole.debug('hello invisible');
             fakeConsole.warn('hello careful');
@@ -208,6 +212,26 @@ describe("SageLog", function() {
                 if(index == 2)
                     expect(logEntry.color).toEqual('#DAA520');
             });
+        });
+
+        it("should attempt to send error logs to a server.", function() {
+            logHandler.init({
+                "captureLogs": true,
+                "logStorerClassName" : "JsonLogStorer",
+                "logLevel": SageLog.ERROR
+            });
+
+            fakeConsole.info('hello world');
+            fakeConsole.error('hello test');       // only ERROR is logged
+            fakeConsole.log('hello nobody');
+            fakeConsole.debug('hello invisible');
+            fakeConsole.warn('hello careful');
+
+            var logArray = logHandler.getLogBundleAsArray();
+            console.debug(JSON.stringify(logArray));
+            //logHandler.sendLogsToServer();
+
+
         });
     });
 });

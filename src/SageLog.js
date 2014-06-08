@@ -87,7 +87,7 @@
 
 	    	var logStorerClassName = 
 	    		options.logStorerClassName === undefined 
-	    		? 'LogStorer'
+	    		? 'JsonLogStorer'
 	    		: options.logStorerClassName;
 
 		    logStorer = new window[logStorerClassName](logBundle, window.location.pathname);
@@ -156,7 +156,21 @@
 		 * Send the logs from this context to the server.
 		 */
 		 this.sendLogsToServer = function() {
+		 	var requestUrl = 'http://localhost:3001/sagelog.js'
+		 	var httpMethod = 'GET';
+		 	var dataPayload;
+		 	var observer = new Observer();
 
+		 	var logsToSend;
+		 	console.debug(dao.constructor.name);
+		 	if(dao.constructor.name == 'JSONPDAO') {
+		 		logsToSend = logBundle.getLogBundleAsJson();
+		 	} else {
+		 		logsToSend = logBundle.getLogBundleAsArray()
+		 	}
+		 	dataPayload = logsToSend;
+		 	dao.send(requestUrl, null, httpMethod, dataPayload, observer);
+		 	//getLogBundleAsJson
 		 };
 
 

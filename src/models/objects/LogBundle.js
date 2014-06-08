@@ -26,4 +26,16 @@ function LogBundle(maxLogLength) {
     this.getLogBundleAsArray = function() {
     	return logMessagesArray;
     };
+
+
+    this.getLogBundleAsJson = function() {
+        var logEntry;
+        var jsonArray = [];
+        logMessagesArray.forEach(function(element, index, array) {
+            logEntry = element.getLogEntry();
+            console.debug('logEntry = ' + logEntry);
+            jsonArray.push(logEntry);
+        });
+        return jsonArray;
+    };
 };

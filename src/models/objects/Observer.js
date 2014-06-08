@@ -12,7 +12,7 @@
 function Observer() {
 	this.constructor = function Observer() { };
 	var data = {};
-	var notify = null;
+	var notify = [];
 
 
 	/**
@@ -24,11 +24,14 @@ function Observer() {
 	 */
 	this.resolve = function(dataObj) {
 		data = dataObj;
-		if(notify)
-		    notify(data);
+		if(notify.length > 0) {
+		    notify.forEach(function(element, index, array) {
+		        element(data);
+		    });
+		}
 		else
 			throw new Error("Must set a 'done' callback prior to setting data.");
-	}
+	};
 
 
 	/**
@@ -39,6 +42,6 @@ function Observer() {
 	 * @param {Function} callback The function to be called when the data object becomes available.
 	 */
 	this.done = function(callback) {
-		if(callback) notify = callback;
-	}
+		if(callback) notify.push(callback);
+	};
 };

@@ -38,11 +38,11 @@ XMLHttpDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, d
   		if(xhr.readyState == 4 && xhr.status == 200) {
             var contentType = xhr.getResponseHeader('content-type');
             var results = null;
-        if(contentType.match(/text\/plain/) != null) {
-            results = xhr.responseText;
-        } else { // assume application/json
-  			results = JSON.parse(xhr.responseText);
-        }
+            if(contentType.match(/text\/plain/) != null) {
+                results = xhr.responseText;
+            } else { // assume application/json
+      		    results = JSON.parse(xhr.responseText);
+            }
   			observer.resolve(results);
   		}
   	}
