@@ -18,6 +18,7 @@ function JSONPDAO() {
  */
 JSONPDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, dataPayload, observer) {
 	observer = observer || new Observer();
+	var callbackObserver = new Observer();
 	var jsonPayload = { handshake: new Date().getTime() };
 	if(typeof dataPayload === 'undefined') throw new TypeError('dataPayload must be a JSON object.');
 	if(typeof dataPayload == 'object') {
@@ -27,7 +28,21 @@ JSONPDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, dat
 	}
 	payloadString = JSON.stringify(jsonPayload);
 
-	var global_observer = 'global_observer' + jsonPayload.handshake;
+	/**
+	 * Using time as handshake id leads to collisions if 2 requests are made within a millisecond, so
+	 * account for collisions by adding an extra meta id.
+	 */
+	var handleCollisions = function(handshake, count) {
+		var global_observer = 'global_observer' + handshake + '_' + count;
+	    if(JSONPDAO[global_observer] !== undefined) {
+			return handleCollisions(handshake, ++count);
+		} else {
+			return global_observer;
+		}
+	};
+
+	//var global_observer = 'global_observer' + jsonPayload.handshake;
+	var global_observer = handleCollisions(jsonPayload.handshake, 0);
 	var callback = 'JSONPDAO.' + global_observer + '.resolve';
 	var fullUrl = requestUrl + '?callback=' + callback + '&json=' + payloadString;
 	
@@ -36,9 +51,14 @@ JSONPDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, dat
 	script.setAttribute("src", fullUrl);
 	document.body.appendChild(script);
 
-	JSONPDAO[global_observer] = observer;
+	/**
+	 * Make sure other callbacks are called first, prior to clearing out the global callback scope.
+	 */
+	JSONPDAO[global_observer] = callbackObserver;
 	JSONPDAO[global_observer].done(function(data) {
-		delete JSONPDAO[global_observer];
+		observer.resolve(data).done(function() {
+			delete JSONPDAO[global_observer];
+		});
 	});
 
 	return observer;

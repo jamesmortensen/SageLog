@@ -77,7 +77,7 @@ describe("SageLog", function() {
         	fakeConsole.debug('hello invisible');
         	fakeConsole.warn('hello careful');
 
-        	logHandler.sendLogsToServer();
+        	//logHandler.sendLogsToServer();
         	setTimeout(function() {
     	    	var logArray = logHandler.getLogBundleAsArray();
 
