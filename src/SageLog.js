@@ -170,7 +170,10 @@
 		 	}
 		 	dataPayload = logsToSend;
 		 	dao.send(requestUrl, null, httpMethod, dataPayload, observer);
-		 	//getLogBundleAsJson
+		 	observer.done(function(result) {
+		 		console.debug('logs sent...');
+		 	});
+		 	return observer;
 		 };
 
 
