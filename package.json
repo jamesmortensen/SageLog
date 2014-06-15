@@ -4,9 +4,9 @@
   "description": "Capture client side logs from users to more easily debug problems on remote computers.",
   "main": "index.js",
   "scripts": {
-    "test": "grunt jasmine",
-    "watch": "grunt watch",
-    "start": "node_modules/.bin/http-server -p 8090 .",
+    "test": "grunt watch:all",
+    "watch": "grunt watch:browser",
+    "start": "grunt watch:browser",
     "min": "mkdir -p dist && find src -name '*.js' -print0 | xargs -0 cat > dist/SageLog.js && node_modules/minify/bin/minify dist/SageLog.js > dist/SageLog.min.js",
     "jsdoc": "node_modules/jsdoc/jsdoc.js src/** ./README.md -d doc -t node_modules/ink-docstrap/template/ -c jsdoc.conf.json"
   },
@@ -18,6 +18,8 @@
     "jsdoc": "^3.3.0-alpha5",
     "grunt-contrib-jasmine": "^0.6.4",
     "grunt-contrib-watch": "^0.6.1",
-    "ink-docstrap": "^0.4.0-3"
+    "ink-docstrap": "^0.4.0-3",
+    "grunt-express-server": "^0.4.17",
+    "grunt-http-server": "0.0.5"
   }
 }

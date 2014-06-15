@@ -1,0 +1,17 @@
+{
+  "name": "sagelog-express-test-server",
+  "version": "0.0.0",
+  "description": "Express test server to receive JSONP requests and echo tests.",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~4.4.3",
+    "morgan": "~1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "James Mortensen",
+  "license": "MIT"
+}

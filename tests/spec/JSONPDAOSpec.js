@@ -17,13 +17,15 @@ describe('JSONPDAO', function() {
 	 	};
 	});
 
-	it('should send data to the server and run a response', function() {
+	it('should send data to the server and run a response', function(done) {
 		requestUrl = 'http://localhost:3001/sagelog.js';
 
 	 	var observer = jsonpDao.send(requestUrl, null, httpMethod, dataPayload);
 
 	 	observer.done(function(data) {
 	 		console.debug('got back the response with handshake id = ' + data.handshake);
+	 		expect(1).toEqual(1);
+	 		done();
 	 	});
 	});
 

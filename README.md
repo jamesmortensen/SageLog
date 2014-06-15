@@ -12,13 +12,13 @@ to a third-party server. The console logs are also color coded for easier readab
 First, install all dependencies:
 
 ```
-$ npm install
+$ npm install && cd tests/express-test-server && npm install && cd ../..
 ```
 
 Then to test from the terminal, run:
 
 ```
-$ npm test
+$ grunt test
 ```
 
 ## Develop
@@ -26,7 +26,7 @@ $ npm test
 To rerun tests continuously while watching for changes, run:
 
 ```
-$ npm run watch
+$ grunt watch:all
 ```
 
 And, to view the tests in the browser, start the http server:
