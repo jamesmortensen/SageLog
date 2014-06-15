@@ -180,6 +180,13 @@
 		 	}
 		 };
 
+
+		 this.getLogBundleAsJson = function() {
+		 	if(logBundle) {
+		 		return logBundle.getLogBundleAsJson();
+		 	}
+		 };
+
 	};
 
 

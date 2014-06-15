@@ -26,7 +26,9 @@ JSONPDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, dat
 	} else {
 		jsonPayload.message = JSON.parse(dataPayload);
 	}
-	payloadString = JSON.stringify(jsonPayload);
+	var payloadString = JSON.stringify(jsonPayload);
+	var uriEncodedPayloadString = encodeURIComponent(payloadString);
+	//var uriEncodedPayloadString = encodeURI(payloadString);
 
 	/**
 	 * Using time as handshake id leads to collisions if 2 requests are made within a millisecond, so
@@ -44,7 +46,7 @@ JSONPDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, dat
 	//var global_observer = 'global_observer' + jsonPayload.handshake;
 	var global_observer = handleCollisions(jsonPayload.handshake, 0);
 	var callback = 'JSONPDAO.' + global_observer + '.resolve';
-	var fullUrl = requestUrl + '?callback=' + callback + '&json=' + payloadString;
+	var fullUrl = requestUrl + '?callback=' + callback + '&json=' + uriEncodedPayloadString;
 	
 	var script = document.createElement("script");
 	script.setAttribute("type", "text/javascript");
