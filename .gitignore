@@ -1,6 +1,6 @@
 node_modules
 doc
-src/SageLogOld.js
+SageLogOld.js
 dist
 _SpecRunner.html
 .grunt
