@@ -155,7 +155,8 @@
 		/**
 		 * Send the logs from this context to the server.
 		 */
-		 this.sendLogsToServer = function() {
+		 this.sendLogsToServer = function(debug) {
+		 	debug = debug == true ? true : false
 		 	var requestUrl = 'http://localhost:3001/sagelog.js'
 		 	var httpMethod = 'GET';
 		 	var dataPayload;
@@ -168,8 +169,13 @@
 		 	} else {
 		 		logsToSend = logBundle.getLogBundleAsArray()
 		 	}
-		 	dataPayload = logsToSend;
+		 	dataPayload = {
+		 		logBundles: [logsToSend]
+		 	};
+		 	if(debug)
+		 		console.debug(dataPayload);
 		 	dao.send(requestUrl, null, httpMethod, dataPayload, observer);
+		 	observer.payload = dataPayload;
 		 	observer.done(function(result) {
 		 		console.debug('logs sent...');
 		 	});
@@ -177,6 +183,11 @@
 		 };
 
 
+		 /**
+		  * Get the underlying array representation of the logs.
+		  *
+		  * @return {Array} An array representation of the logBundle.
+		  */
 		 this.getLogBundleAsArray = function() {
 		 	if(logBundle) {
 		 		return logBundle.getLogBundleAsArray();
@@ -184,6 +195,11 @@
 		 };
 
 
+		 /**
+		  * Get the underlying JSON representation of the logs as a JSON object.
+		  *
+		  * @return {Object} A JSON representation of the logBundle.
+		  */
 		 this.getLogBundleAsJson = function() {
 		 	if(logBundle) {
 		 		return logBundle.getLogBundleAsJson();

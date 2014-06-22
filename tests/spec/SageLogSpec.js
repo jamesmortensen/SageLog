@@ -214,7 +214,7 @@ describe("SageLog", function() {
             });
         });
 
-        it("should attempt to send error logs to a server.", function() {
+        it("should attempt to send error logs to a server.", function(done) {
             logHandler.init({
                 "captureLogs": true,
                 "logStorerClassName" : "JsonLogStorer",
@@ -222,14 +222,32 @@ describe("SageLog", function() {
             });
 
             fakeConsole.info('hello world');
-            fakeConsole.error('hello test');       // only ERROR is logged
+            fakeConsole.error('hello test');              // only ERROR is logged
             fakeConsole.log('hello nobody');
             fakeConsole.debug('hello invisible');
+            fakeConsole.error('hello error');             // only ERROR is logged
             fakeConsole.warn('hello careful');
+            fakeConsole.error('hello more errors');       // only ERROR is logged
+            fakeConsole.error('~`!@#$%^&*()_+-=;":/?.>,<[]{}|\'\\\n <div>Test & test</div>');
 
             var logArray = logHandler.getLogBundleAsArray();
             console.debug(JSON.stringify(logArray));
-            //logHandler.sendLogsToServer();
+            var observer = logHandler.sendLogsToServer(/** debug*/ true);
+
+            observer.done(function(result) {
+                console.debug('result = ' + result);
+                expect(observer.payload).toBeDefined();
+                var logEntries = observer.payload.logBundles[0].logEntries;
+                expect(logEntries[0].color).toEqual('red');
+                expect(logEntries[1].color).toEqual('red');
+                expect(logEntries[2].color).toEqual('red');
+                expect(logEntries[0].encodedData).toEqual('hello test');
+                expect(logEntries[1].encodedData).toEqual('hello error');
+                expect(logEntries[2].encodedData).toEqual('hello more errors');
+                var unencodedData = HTMLDecodeHelper.htmlDecode(logEntries[3].encodedData);
+                expect(unencodedData).toEqual('~`!@#$%^&*()_+-=;":/?.>,<[]{}|\'\\\n <div>Test & test</div>');
+                done();
+            });
 
 
         });

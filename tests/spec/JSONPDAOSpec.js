@@ -81,23 +81,26 @@ describe('JSONPDAO', function() {
         fakeConsole.warn('hello careful');
         fakeConsole.error('~`!@#$%^&*()_+-=;":/?.>,<[]{}|\'\\\n <div>Test & test</div>');
 
-        var logArray = logHandler.getLogBundleAsJson();
+        var logJson = logHandler.getLogBundleAsJson();
+        var logArray = logJson.logEntries;
 
         expect(logArray.length).toEqual(4);
     
-	 	dataPayload = JSON.stringify(logArray);
+	 	dataPayload = JSON.stringify({logBundles:[logJson]});
 	 	var observer = jsonpDao.send(requestUrl, null, httpMethod, dataPayload);
 
 	 	observer.done(function(data) {
 	 		console.debug('got back the response with handshake id = ' + data.handshake);
-	 		console.debug('got back the response with color = ' + data.message[0].color);
-	 		expect(data.message[0].color).toEqual('#006400');
-	 		expect(data.message[1].color).toEqual('red');
-	 		expect(data.message[2].color).toEqual('#DAA520');
-	 		expect(data.message[0].encodedData).toEqual('hello world');
-	 		expect(data.message[1].encodedData).toEqual('hello test');
-	 		expect(data.message[2].encodedData).toEqual('hello careful');
-	 		var unencodedData = htmlDecode(data.message[3].encodedData);
+	 		console.debug('got back the response with handshake id = ' + data.message.logBundles[0].bundleName);
+	 		console.debug('got back the response with color = ' + data.message.logBundles[0].logEntries[0].color);
+	 		var logEntries = data.message.logBundles[0].logEntries;
+	 		expect(logEntries[0].color).toEqual('#006400');
+	 		expect(logEntries[1].color).toEqual('red');
+	 		expect(logEntries[2].color).toEqual('#DAA520');
+	 		expect(logEntries[0].encodedData).toEqual('hello world');
+	 		expect(logEntries[1].encodedData).toEqual('hello test');
+	 		expect(logEntries[2].encodedData).toEqual('hello careful');
+	 		var unencodedData = HTMLDecodeHelper.htmlDecode(logEntries[3].encodedData);
 	 		expect(unencodedData).toEqual('~`!@#$%^&*()_+-=;":/?.>,<[]{}|\'\\\n <div>Test & test</div>');
 	 		done();
 	 	});
