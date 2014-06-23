@@ -72,7 +72,7 @@
 		 * 
 		 * 
 		 * @example
-		 * var sageLog = new SageLogs();
+		 * var sageLog = new SageLog();
 		 * // Options defaults:
 		 * var options: {
 		 *     "logLevel": logLevel.INFO                  // log at INFO, WARN, and ERROR.
@@ -80,7 +80,7 @@
 		 *     "showTimestamps": false,                   // include timestamps?
 		 *     "server": "http://example.com/logs"        // where to POST (or send via GET) the data.
 		 * };
-		 * SageLogs.init(options);
+		 * sageLog.init(options);
 		 * @param {Object} options The options to pass into the initialize method to configure SageLogs.
 		 */
 	    this.init = function(options) {

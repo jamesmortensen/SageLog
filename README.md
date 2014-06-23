@@ -64,7 +64,14 @@ This minifies and bundles the sources in dist/SageLog.js and dist/SageLog.min.js
 To initialize the logger, once logHandler loads, call:
 
 ```javascript
-logHandler.init({"captureLogs":true});
+var sageLog = new SageLog();
+// Options defaults:
+var options: {
+ "logLevel": logLevel.INFO                  // log at INFO, WARN, and ERROR.
+ "showTimestamps": false,                   // include timestamps?
+ "server": "http://example.com/logs"        // where to POST (or send via GET) the data.
+};
+sageLog.init(options);
 ```
 
 
