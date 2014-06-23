@@ -28,7 +28,6 @@ JSONPDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, dat
 	}
 	var payloadString = JSON.stringify(jsonPayload);
 	var uriEncodedPayloadString = encodeURIComponent(payloadString);
-	//var uriEncodedPayloadString = encodeURI(payloadString);
 
 	/**
 	 * Using time as handshake id leads to collisions if 2 requests are made within a millisecond, so
@@ -43,29 +42,33 @@ JSONPDAO.prototype.send = function(requestUrl, authorizationKey, httpMethod, dat
 		}
 	};
 
-	//var global_observer = 'global_observer' + jsonPayload.handshake;
 	var global_observer = handleCollisions(jsonPayload.handshake, 0);
-	var callback = 'JSONPDAO.' + global_observer + '.resolve';
+	var callback = 'global.JSONPDAO.' + global_observer + '.resolve';
 	var fullUrl = requestUrl + '?callback=' + callback + '&json=' + uriEncodedPayloadString;
 	
+	/**
+	 * Send the logs to the remote server.
+	 */
 	var script = document.createElement("script");
 	script.setAttribute("type", "text/javascript");
 	script.setAttribute("src", fullUrl);
 	document.body.appendChild(script);
 
 	/**
+	 * Create a global with a JSONPDAO property if none exists. JSONP responses require global access.
+	 */
+	global = typeof global == 'undefined' ? { JSONPDAO: {} } : global;
+
+	/**
 	 * Make sure other callbacks are called first, prior to clearing out the global callback scope.
 	 */
-	JSONPDAO[global_observer] = callbackObserver;
-	JSONPDAO[global_observer].done(function(data) {
+	global.JSONPDAO[global_observer] = callbackObserver;
+	global.JSONPDAO[global_observer].done(function(data) {
 		observer.resolve(data).done(function() {
-			delete JSONPDAO[global_observer];
+			delete global.JSONPDAO[global_observer];
 		});
 	});
 
 	return observer;
 
 };
-
-
-//JSONPDAO.global_observer = {};

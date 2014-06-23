@@ -9,6 +9,7 @@
  */
 (function() {
 
+
 	/**
 	 * Creates an instance of SageLogs.
 	 *
@@ -57,10 +58,7 @@
 		var timestampsEnabled = false;
 
 		var consoleLogsAreNowOveridden = false;
-
-		//var consoleLogOverridder;
 		var sageHeaderProps;
-
 		var logBundle;
 		var logStorer;
 		var dao;
@@ -97,7 +95,7 @@
 	    		? 'JsonLogStorer'
 	    		: options.logStorerClassName;
 
-		    logStorer = new window[logStorerClassName](logBundle, window.location.pathname);
+		    logStorer = new module[logStorerClassName](logBundle, window.location.pathname);
 			
 			_console.log("Log level set to " + options.logLevel);
 			logLevel = options.logLevel !== undefined ? options.logLevel : logLevel;
@@ -116,7 +114,7 @@
 	        	? 'JSONPDAO'
 	        	: options.logSenderDao;
 	        	
-	        dao = new window[SenderDao]();
+	        dao = new module[SenderDao]();
 	        //logHandlerObj.headerProps = {};
 	    };
 
@@ -226,6 +224,16 @@
 	SageLogs.prototype.WARN = SageLogs.WARN = 3;
 	SageLogs.prototype.ERROR = SageLogs.ERROR = 4;
 
+    /**
+     * SageLog Module wrappers
+     */
+	var module = {};
+	window.addEventListener('load', function() {
+		module.JSONPDAO = JSONPDAO;
+		module.JsonLogStorer = JsonLogStorer;
+		module.LogStorer = LogStorer;
+		module.XMLHttpDAO = XMLHttpDAO;
+	}, false);
 
 	window.SageLog = SageLogs;
 
