@@ -50,13 +50,6 @@ describe('JSONPDAO', function() {
 	});
 
 	it('should pass actual log data to the server and echo the response', function(done) {
-		
-		// http://stackoverflow.com/a/1249234/552792
-		function htmlDecode(input){
-		    var e = document.createElement('div');
-		    e.innerHTML = input;
-		    return e.childNodes[0].nodeValue;
-		};
 
 		requestUrl = 'http://localhost:3001/echo.js';
 
@@ -71,7 +64,8 @@ describe('JSONPDAO', function() {
         logHandler.init({
             "captureLogs": true,
             "logStorerClassName" : "JsonLogStorer",
-            "logLevel": SageLog.INFO
+            "logLevel": SageLog.INFO,
+            "server": requestUrl
         });
 
         fakeConsole.info('hello world');

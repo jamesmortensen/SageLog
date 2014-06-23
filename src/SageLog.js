@@ -64,6 +64,7 @@
 		var logBundle;
 		var logStorer;
 		var dao;
+		var server;
 
 
 		/**
@@ -76,13 +77,19 @@
 		 * var options: {
 		 *     "logLevel": logLevel.INFO                  // log at INFO, WARN, and ERROR.
 		 *     "logPosterCallback": uploadLogsToMyServer  // your callback function to send logs to remote endpoint.
-		 *     "showTimestamps": false 
+		 *     "showTimestamps": false,                   // include timestamps?
+		 *     "server": "http://example.com/logs"        // where to POST (or send via GET) the data.
 		 * };
 		 * SageLogs.init(options);
 		 * @param {Object} options The options to pass into the initialize method to configure SageLogs.
 		 */
 	    this.init = function(options) {
 
+	    	server = options.server;
+
+			if(!HttpUrlValidator.isUrlValid(server))
+				throw TypeError('The init method requires a valid "server" parameter as a URL. "' + server + '" is not valid.');
+			
 	    	logBundle = new LogBundle();
 
 	    	var logStorerClassName = 
@@ -156,8 +163,8 @@
 		 * Send the logs from this context to the server.
 		 */
 		 this.sendLogsToServer = function(debug) {
-		 	debug = debug == true ? true : false
-		 	var requestUrl = 'http://localhost:3001/sagelog.js'
+		 	debug = debug == true ? true : false;
+		 	var requestUrl = server;
 		 	var httpMethod = 'GET';
 		 	var dataPayload;
 		 	var observer = new Observer();

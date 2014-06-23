@@ -22,7 +22,8 @@ describe("SageLog", function() {
      * logHandler is reinstantiated with a new SageLog after each test, and it uses a fresh console copy so
      * every test starts with fresh data and a fresh context.
      */
-    var logHandler;
+    var logHandler,
+        requestUrl;
     
 
     describe("Collecting logs", function() {
@@ -31,6 +32,7 @@ describe("SageLog", function() {
         beforeEach(function() {
     	    fakeConsole = FakeConsoleHelper.makeFakeConsole(masterFakeConsole);     // make fake console copy
     	    logHandler = new SageLog(fakeConsole);
+            requestUrl = 'http://localhost:3001/sagelog.js';
     	});
 
 
@@ -39,7 +41,8 @@ describe("SageLog", function() {
             logHandler.init({
                 "captureLogs": true, 
                 "logLevel": SageLog.DEBUG,
-                "logStorerClassName": "LogStorer"
+                "logStorerClassName": "LogStorer",
+                "server": requestUrl
             });
 
             fakeConsole.info('hello world');
@@ -68,7 +71,8 @@ describe("SageLog", function() {
         	logHandler.init({
     			"captureLogs": true, 
     			"logLevel": SageLog.INFO,
-                "logStorerClassName": "LogStorer"
+                "logStorerClassName": "LogStorer",
+                "server": requestUrl
     		});
         	
         	fakeConsole.info('hello world');
@@ -96,7 +100,8 @@ describe("SageLog", function() {
         	logHandler.init({
     			"captureLogs": true, 
     			"logLevel": SageLog.ERROR,
-                "logStorerClassName": "LogStorer"
+                "logStorerClassName": "LogStorer",
+                "server": requestUrl
     		});
 
         	fakeConsole.info('hello world');
@@ -121,7 +126,8 @@ describe("SageLog", function() {
         	logHandler.init({
     			"captureLogs": true, 
     			"logLevel": 0,
-                "logStorerClassName": "LogStorer"
+                "logStorerClassName": "LogStorer",
+                "server": requestUrl
     		});
         	
         	fakeConsole.info({name: "James"});
@@ -172,7 +178,8 @@ describe("SageLog", function() {
             logHandler.init({
                 "captureLogs": true,
                 "logStorerClassName" : "JsonLogStorer",
-                "logLevel": SageLog.INFO
+                "logLevel": SageLog.INFO,
+                "server": requestUrl
             });
 
             fakeConsole.info('hello world');
@@ -218,7 +225,8 @@ describe("SageLog", function() {
             logHandler.init({
                 "captureLogs": true,
                 "logStorerClassName" : "JsonLogStorer",
-                "logLevel": SageLog.ERROR
+                "logLevel": SageLog.ERROR,
+                "server": requestUrl
             });
 
             fakeConsole.info('hello world');
