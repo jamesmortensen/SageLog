@@ -10,7 +10,7 @@ function JsonLogStorer(logBundle, locationPathname) {
 		// HTML-encode '<' and '>'
 		var encodedData = data.replace(/</gm,'&lt;').replace(/>/gm,'&gt;');
 		
-		var logEntry = new LogEntry(color, encodedData, locationPathname, new Date().getTime());
+		var logEntry = new LogEntry(logEntryLevel, color, encodedData, locationPathname, new Date().getTime());
 
 		
 		logBundle.push(logEntry);

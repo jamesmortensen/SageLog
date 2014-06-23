@@ -60,7 +60,6 @@ function LogBundle(maxLogLength) {
         var jsonObject = {};
         logMessagesArray.forEach(function(element, index, array) {
             logEntry = element.getLogEntry();
-            console.debug('logEntry = ' + logEntry);
             jsonArray.push(logEntry);
         });
         jsonObject = {

@@ -123,23 +123,13 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 			var file = arguments[1];
 			var line = arguments[2];
 			var position = arguments[3];
-			var error = arguments[4];
+			var error = arguments[4];     // error.stack contains the stack trace
 
-			//_console.log(arguments[0] + " : " + arguments[1] + " : " + arguments[2] + " : " + arguments[3] + " : " + arguments[4]);		
 			var args = [];
 			if(typeof(arguments[0]) == "string") {
 				
-				// apply color to console logs
-//				args[0] = legacyFn.name + " :: " + arguments[0];
-//				args[1] = "color:" + logLevelColors[LOG_LEVELS[legacyFn.name.toUpperCase()]];
 				args = arguments;
-			    //consoleLogProcessor.processLog(legacyFn, this, args);                
 
-                
-			
-				// pass in as arguments to original function
-				//legacyFn.apply(this, args);		
-				//args[0] += "\n" + logHandler.getStackTrace();   
 			    var fileArr = file.split("\/");
 			    var filePath = fileArr[fileArr.length-1];
 
@@ -147,7 +137,7 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 				consoleLogProcessor.processErrorLog(legacyFn, this, args);
 				//_console.error("E : " + arguments[0] + " : " + arguments[1] + " : " + arguments[2] + " : " + arguments[3] + " : " + arguments[4]);		
 
-				//storedLogProcessor.processLog(legacyFn, this, arguments);
+				storedLogProcessor.processLog(legacyFn, this, arguments);
 
 			} else {
 			
@@ -156,8 +146,7 @@ function ConsoleLogOverridder(consoleLogProcessor, storedLogProcessor, logLevel,
 				
 				args[0] = legacyFn.name + " :: " + JSON.stringify(arguments[0]);
 				
-			}			
-			//return legacyFn.apply(this, arguments);
+			}
 		};
 
 		return function() { sagelog.apply(this, arguments); }

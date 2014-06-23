@@ -137,24 +137,48 @@ describe("SageLog", function() {
         	expect(logArray.length).toEqual(0);
         });
 
+        
+        it("Should throw an uncaught exception in the console and also store it", function(done) {
+        	
+            logHandler.init({
+                "captureLogs": true, 
+                "logLevel": 0,
+                "logStorerClassName": "JsonLogStorer",
+                "server": requestUrl
+            });
 
-        /*it("Should throw an error in the console and also store that error", function() {
-        	// TODO: Need to get this working
-        	//ttt();
-        	//console.log('logs after error = ' + logHandler.getLogBundleAsArray().length);
+            /**
+             * Generate an uncaught exception
+             */
+            setTimeout(function() {
+                thisGeneratesAnUncaughtException_AndIs_A_NormalErrorYouCanIgnoreInTheLogs();    
+            },500);
+
+            /**
+             * Verify uncaught exception is stored in captured logs
+             */
+        	setTimeout(function() {
+        	   console.log('logs after error = ' + logHandler.getLogBundleAsArray().length);
+               var logJson = logHandler.getLogBundleAsJson();
+               var exception = logJson.logEntries[0].encodedData;
+               console.debug(exception);
+               expect(exception.match(/Uncaught ReferenceError/).length).toEqual(1);
+               done();
+            },1000);
         });
 
-        it("should show an error in the logs", function() {
-    		//console.log('logs after error = ' + logHandler.getLogBundleAsArray().length);
-        });*/
 
-        // Uncomment to run performance tests
-        /*it("Should be able to handle 10000 log entries without performance degradation", function() {
+        /**
+         * Remove "x" to run performance tests.
+         */
+        xit("Should be able to handle 10000 log entries without performance degradation", function() {
 
             var start = new Date().getTime();
             logHandler.init({
                 "captureLogs": true, 
-                "logLevel": 0
+                "logLevel": 0,
+                "logStorerClassName": "LogStorer",
+                "server": requestUrl
             });
 
             for(var i = 0; i < 10000; i++) {
@@ -163,8 +187,7 @@ describe("SageLog", function() {
 
             var stop = new Date().getTime();
             console.debug("Total Run Time = " + (stop - start) + "ms");
-        });*/
-
+        });
     });
 
     describe("Collecting Logs as JSON objects", function() {
@@ -172,6 +195,7 @@ describe("SageLog", function() {
         beforeEach(function() {
             fakeConsole = FakeConsoleHelper.makeFakeConsole(masterFakeConsole);     // make fake console copy
             logHandler = new SageLog(fakeConsole);
+            requestUrl = 'http://localhost:3001/sagelog.js';
         });
 
         it("should store INFO logs only, and 2 entries", function() {
@@ -258,6 +282,38 @@ describe("SageLog", function() {
             });
 
 
+        });
+
+        it("should attempt to send error logs to a server twice!", function(done) {
+            logHandler.init({
+                "captureLogs": true,
+                "logStorerClassName" : "JsonLogStorer",
+                "logLevel": SageLog.ERROR,
+                "server": requestUrl
+            });
+
+            fakeConsole.error('hello error');             // only ERROR is logged
+
+            var logArray = logHandler.getLogBundleAsArray();
+            console.debug(JSON.stringify(logArray));
+            var observer = logHandler.sendLogsToServer(/** debug*/ true);
+
+            observer.done(function(result) {
+                console.debug('result = ' + result);
+                expect(observer.payload).toBeDefined();
+                var logEntries = observer.payload.logBundles[0].logEntries;
+                expect(logEntries[0].color).toEqual('red');
+                expect(logEntries[0].encodedData).toEqual('hello error');
+                
+                var observer2 = logHandler.sendLogsToServer(/** debug*/ true);
+                observer2.done(function(result) {
+                    console.debug('result2 = ' + result);
+                    var logEntries2 = observer2.payload.logBundles[0].logEntries;
+                    expect(logEntries[0].color).toEqual('red');
+                    expect(logEntries[0].encodedData).toEqual('hello error');
+                    done();
+                });
+            });
         });
     });
 });
